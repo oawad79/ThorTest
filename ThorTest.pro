@@ -14,14 +14,13 @@ QMAKE_CXXFLAGS += -std=c++11
 TEMPLATE = app
 TARGET = thor
 INCLUDEPATH += .
-INCLUDEPATH += "/home/oawad/Downloads/STP-master/include"
 INCLUDEPATH += "/usr/local/include"
 
 LIBS += -L"."
 LIBS += -L"/usr/local/lib"
 
-CONFIG(release, debug|release): LIBS += -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
-CONFIG(debug, debug|release): LIBS += -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
+CONFIG(release, debug|release): LIBS += -lsfgui -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
+CONFIG(debug, debug|release): LIBS += -lsfgui -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
 
 # Input
 

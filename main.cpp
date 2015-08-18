@@ -1,8 +1,12 @@
+#include <SFGUI/SFGUI.hpp>
+#include <SFGUI/Widgets.hpp>
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
 #include <QDebug>
 #include <QString>
+
 
 #include <Thor/Animations.hpp>
 #include <STP/TMXLoader.hpp>
@@ -24,6 +28,11 @@ void addFrames(thor::FrameAnimation& animation, int y, int xFirst, int xLast, fl
 
 int main()
 {
+    sfg::SFGUI m_sfgui;
+    auto sfguiWindow = sfg::Window::Create();
+    sfguiWindow->SetTitle( "Collected" );
+
+
     tmx::TileMap map("/home/oawad/Downloads/sfml/ThorTest/Media/sup2.tmx");
     tmx::Layer &collisionLayer = map.GetLayer("Collision");
     tmx::Layer &backLayer = map.GetLayer("back");
@@ -32,6 +41,9 @@ int main()
     sf::Vector2i screenDimensions(640,640);
     sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Animations!");
     window.setFramerateLimit(60);
+
+    sfguiWindow->SetPosition(sf::Vector2f(screenDimensions.x - 100, 10));
+    sfguiWindow->SetRequisition(sf::Vector2f(100, 100));
 
     sf::View view;
     view.reset(sf::FloatRect(0, 0, screenDimensions.x, screenDimensions.y));
@@ -91,6 +103,8 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            sfguiWindow->HandleEvent( event );
+
             if (event.type == sf::Event::Closed)
             {
                 return 0;
@@ -212,6 +226,7 @@ int main()
         view.setCenter(scrollPosition);
 
         window.setView(view);
+        sfguiWindow->Update( dt.asSeconds() );
 
         // Update animator and apply current animation state to the sprite
         animator.update(dt);
@@ -221,6 +236,8 @@ int main()
         window.clear();
         window.draw(map);
         window.draw(sprite);
+        m_sfgui.Display( window );
+
         window.display();
     }
 }
