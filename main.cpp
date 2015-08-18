@@ -29,9 +29,10 @@ void addFrames(thor::FrameAnimation& animation, int y, int xFirst, int xLast, fl
 int main()
 {
     sfg::SFGUI m_sfgui;
+    sfg::Label::Ptr collected = sfg::Label::Create( "test" );
     auto sfguiWindow = sfg::Window::Create();
     sfguiWindow->SetTitle( "Collected" );
-
+    sfguiWindow->Add(collected);
 
     tmx::TileMap map("/home/oawad/Downloads/sfml/ThorTest/Media/sup2.tmx");
     tmx::Layer &collisionLayer = map.GetLayer("Collision");
@@ -42,8 +43,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Animations!");
     window.setFramerateLimit(60);
 
-    sfguiWindow->SetPosition(sf::Vector2f(screenDimensions.x - 100, 10));
-    sfguiWindow->SetRequisition(sf::Vector2f(100, 100));
+    sfguiWindow->SetPosition(sf::Vector2f(screenDimensions.x - 125, 2));
+    sfguiWindow->SetRequisition(sf::Vector2f(120, 150));
 
     sf::View view;
     view.reset(sf::FloatRect(0, 0, screenDimensions.x, screenDimensions.y));
@@ -92,6 +93,8 @@ int main()
 
 
     animator.playAnimation("standStill", false);
+
+    int collectedCount = 0;
 
     // Main loop
     while (window.isOpen())
@@ -169,6 +172,7 @@ int main()
         if (!foodTile.empty() && foodTile.visible)
         {
             foodTile.visible = false;
+            collectedCount++;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -231,6 +235,8 @@ int main()
         // Update animator and apply current animation state to the sprite
         animator.update(dt);
         animator.animate(sprite);
+
+        collected->SetText(QString("Collected : ").append(QString::number(collectedCount)).toStdString());
 
         // Draw everything
         window.clear();
