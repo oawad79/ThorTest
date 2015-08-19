@@ -7,9 +7,10 @@
 #include <QDebug>
 #include <QString>
 
-
 #include <Thor/Animations.hpp>
 #include <STP/TMXLoader.hpp>
+
+#include <GL/gl.h>
 
 const int gravity = 350;
 bool onGround = false;
@@ -34,6 +35,10 @@ int main()
     sfguiWindow->SetTitle( "Collected" );
     sfguiWindow->Add(collected);
 
+    sfg::Desktop desktop;
+
+    desktop.Add( sfguiWindow );
+
     tmx::TileMap map("/home/oawad/Downloads/sfml/ThorTest/Media/sup2.tmx");
     tmx::Layer &collisionLayer = map.GetLayer("Collision");
     tmx::Layer &backLayer = map.GetLayer("back");
@@ -43,14 +48,14 @@ int main()
     sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Animations!");
     window.setFramerateLimit(60);
 
-    sfguiWindow->SetPosition(sf::Vector2f(screenDimensions.x - 125, 2));
+    //sfguiWindow->SetPosition(sf::Vector2f(screenDimensions.x - 125, 2));
     sfguiWindow->SetRequisition(sf::Vector2f(120, 150));
 
     sf::View view;
     view.reset(sf::FloatRect(0, 0, screenDimensions.x, screenDimensions.y));
     view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 
-    sf::Vector2f scrollPosition(screenDimensions.x / 2, screenDimensions.y / 2);
+    sf::Vector2f scrollPosition(screenDimensions.x * .75 / 2, screenDimensions.y / 2);
 
     // Load image that contains animation steps
     sf::Image image;
@@ -106,7 +111,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            sfguiWindow->HandleEvent( event );
+            desktop.HandleEvent( event );
 
             if (event.type == sf::Event::Closed)
             {
@@ -165,7 +170,7 @@ int main()
 
         //get the tile for the sprite
         sf::FloatRect spriteBounds = sprite.getGlobalBounds();
-        sf::Vector2f spriteTile({ceil(spriteBounds.left / 32 + 1), ceil(spriteBounds.top / 32 + 1)});
+        sf::Vector2f spriteTile({static_cast<float>(ceil(spriteBounds.left / 32 + 1)), static_cast<float>(ceil(spriteBounds.top / 32 + 1))});
 
         tmx::Layer::Tile& foodTile = foodLayer.GetTile(spriteTile.x -1, spriteTile.y-1);
 
@@ -230,7 +235,7 @@ int main()
         view.setCenter(scrollPosition);
 
         window.setView(view);
-        sfguiWindow->Update( dt.asSeconds() );
+        desktop.Update( dt.asSeconds());
 
         // Update animator and apply current animation state to the sprite
         animator.update(dt);
@@ -242,6 +247,20 @@ int main()
         window.clear();
         window.draw(map);
         window.draw(sprite);
+
+        glEnable (GL_SCISSOR_TEST);
+        glScissor(screenDimensions.x * .75, 0, screenDimensions.x * .25,  screenDimensions.y);
+        window.clear();
+
+        sf::CircleShape circle;
+        circle.setRadius(20);
+        circle.setFillColor(sf::Color::Red);
+        circle.setPosition(scrollPosition.x + 160, 20);
+
+        window.draw(circle);
+
+        glDisable (GL_SCISSOR_TEST);
+
         m_sfgui.Display( window );
 
         window.display();

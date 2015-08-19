@@ -19,8 +19,8 @@ INCLUDEPATH += "/usr/local/include"
 LIBS += -L"."
 LIBS += -L"/usr/local/lib"
 
-CONFIG(release, debug|release): LIBS += -lsfgui -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
-CONFIG(debug, debug|release): LIBS += -lsfgui -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
+CONFIG(release, debug|release): LIBS += -lglut -lGL -lsfgui -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
+CONFIG(debug, debug|release): LIBS += -lglut -lGL -lsfgui -lpugixml -lSTP -lthor -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-network -lsfml-window
 
 # Input
 
