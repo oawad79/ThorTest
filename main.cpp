@@ -30,7 +30,7 @@ void addFrames(thor::FrameAnimation& animation, int y, int xFirst, int xLast, fl
 int main()
 {
     sfg::SFGUI m_sfgui;
-    sfg::Label::Ptr collected = sfg::Label::Create( "test" );
+    sfg::Label::Ptr collected = sfg::Label::Create( "" );
     auto sfguiWindow = sfg::Window::Create();
     sfguiWindow->SetTitle( "Collected" );
     sfguiWindow->Add(collected);
@@ -44,18 +44,17 @@ int main()
     tmx::Layer &backLayer = map.GetLayer("back");
     tmx::Layer &foodLayer = map.GetLayer("Food");
 
-    sf::Vector2i screenDimensions(640,640);
+    sf::Vector2i screenDimensions(800,640);
     sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Animations!");
     window.setFramerateLimit(60);
 
-    //sfguiWindow->SetPosition(sf::Vector2f(screenDimensions.x - 125, 2));
-    sfguiWindow->SetRequisition(sf::Vector2f(120, 150));
+    sfguiWindow->SetRequisition(sf::Vector2f(130, screenDimensions.y));
 
     sf::View view;
     view.reset(sf::FloatRect(0, 0, screenDimensions.x, screenDimensions.y));
     view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 
-    sf::Vector2f scrollPosition(screenDimensions.x * .75 / 2, screenDimensions.y / 2);
+    sf::Vector2f scrollPosition(screenDimensions.x / 2, screenDimensions.y / 2);
 
     // Load image that contains animation steps
     sf::Image image;
@@ -249,16 +248,9 @@ int main()
         window.draw(sprite);
 
         glEnable (GL_SCISSOR_TEST);
-        glScissor(screenDimensions.x * .75, 0, screenDimensions.x * .25,  screenDimensions.y);
+        glScissor(680, 0, 120,  screenDimensions.y);
         window.clear();
-
-        sf::CircleShape circle;
-        circle.setRadius(20);
-        circle.setFillColor(sf::Color::Red);
-        circle.setPosition(scrollPosition.x + 160, 20);
-
-        window.draw(circle);
-
+        sfguiWindow->SetPosition(sf::Vector2f(670, 0));
         glDisable (GL_SCISSOR_TEST);
 
         m_sfgui.Display( window );
