@@ -27,3 +27,5 @@ CONFIG(debug, debug|release): LIBS += -lglut -lGL -lsfgui -lpugixml -lSTP -lthor
 HEADERS +=
 SOURCES += main.cpp
 
+OTHER_FILES += Media/*.png
+

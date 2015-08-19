@@ -29,16 +29,6 @@ void addFrames(thor::FrameAnimation& animation, int y, int xFirst, int xLast, fl
 
 int main()
 {
-    sfg::SFGUI m_sfgui;
-    sfg::Label::Ptr collected = sfg::Label::Create( "" );
-    auto sfguiWindow = sfg::Window::Create(sfg::Window::Style::NO_STYLE);
-    sfguiWindow->SetTitle( "Collected" );
-    sfguiWindow->Add(collected);
-
-    sfg::Desktop desktop;
-
-    desktop.Add( sfguiWindow );
-
     tmx::TileMap map("/home/oawad/Downloads/sfml/ThorTest/Media/sup2.tmx");
     tmx::Layer &collisionLayer = map.GetLayer("Collision");
     tmx::Layer &backLayer = map.GetLayer("back");
@@ -47,8 +37,6 @@ int main()
     sf::Vector2i screenDimensions(800,640);
     sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Animations!");
     window.setVerticalSyncEnabled(true);
-
-    sfguiWindow->SetRequisition(sf::Vector2f(130, screenDimensions.y));
 
     sf::View view;
     view.reset(sf::FloatRect(0, 0, screenDimensions.x, screenDimensions.y));
@@ -70,6 +58,17 @@ int main()
     // Create sprite which is animated
     sf::Sprite sprite(texture);
     sprite.setPosition(100.f, 100.f);
+
+    sf::Image lettersImage;
+    if (!lettersImage.loadFromFile("/home/oawad/Downloads/sfml/ThorTest/Media/welcome.png"))
+        return 1;
+
+    sf::Texture lettersTexture;
+    if (!lettersTexture.loadFromImage(lettersImage))
+        return 1;
+
+    // Create sprite which is animated
+    sf::Sprite lettersSprite(lettersTexture);
 
     // Define walk animation
     thor::FrameAnimation walkLeft;
@@ -110,7 +109,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            desktop.HandleEvent( event );
+            //desktop.HandleEvent( event );
 
             if (event.type == sf::Event::Closed)
             {
@@ -228,13 +227,10 @@ int main()
         view.setCenter(scrollPosition);
 
         window.setView(view);
-        desktop.Update( dt.asSeconds());
 
         // Update animator and apply current animation state to the sprite
         animator.update(dt);
         animator.animate(sprite);
-
-        collected->SetText(QString("Collected : ").append(QString::number(collectedCount)).toStdString());
 
         // Draw everything
         window.clear();
@@ -244,10 +240,12 @@ int main()
         glEnable (GL_SCISSOR_TEST);
         glScissor(680, 0, 120,  screenDimensions.y);
         window.clear();
-        sfguiWindow->SetPosition(sf::Vector2f(670, 0));
-        glDisable (GL_SCISSOR_TEST);
 
-        m_sfgui.Display( window );
+        lettersSprite.setTextureRect(sf::IntRect(0, 0, 112, 32));
+        lettersSprite.setPosition(sf::Vector2f(scrollPosition.x + 285, 0));
+
+        window.draw(lettersSprite);
+        glDisable (GL_SCISSOR_TEST);
 
         window.display();
     }

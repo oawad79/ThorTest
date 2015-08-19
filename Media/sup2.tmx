@@ -3,6 +3,9 @@
  <tileset firstgid="1" name="test" tilewidth="32" tileheight="32" tilecount="240">
   <image source="RocksSP.png" width="512" height="480"/>
  </tileset>
+ <tileset firstgid="241" name="letters" tilewidth="16" tileheight="32" tilecount="400">
+  <image source="RocksFontMedium.png" width="320" height="640"/>
+ </tileset>
  <layer name="back" width="60" height="20">
   <data>
    <tile gid="0"/>
