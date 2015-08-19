@@ -31,7 +31,7 @@ int main()
 {
     sfg::SFGUI m_sfgui;
     sfg::Label::Ptr collected = sfg::Label::Create( "" );
-    auto sfguiWindow = sfg::Window::Create();
+    auto sfguiWindow = sfg::Window::Create(sfg::Window::Style::NO_STYLE);
     sfguiWindow->SetTitle( "Collected" );
     sfguiWindow->Add(collected);
 
@@ -46,7 +46,7 @@ int main()
 
     sf::Vector2i screenDimensions(800,640);
     sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Animations!");
-    window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
 
     sfguiWindow->SetRequisition(sf::Vector2f(130, screenDimensions.y));
 
