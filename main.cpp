@@ -163,20 +163,14 @@ int main()
                     }
                 }
 
+                sf::FloatRect foodArea;
+                if (sprite.getGlobalBounds().intersects(foodLayer.GetTile(x, y).GetGlobalBounds(), foodArea) && foodLayer.GetTile(x, y).visible)
+                {
+                    foodLayer.GetTile(x, y).visible = false;
+                    collectedCount++;
+                }
             }
 
-        }
-
-        //get the tile for the sprite
-        sf::FloatRect spriteBounds = sprite.getGlobalBounds();
-        sf::Vector2f spriteTile({static_cast<float>(ceil(spriteBounds.left / 32 + 1)), static_cast<float>(ceil(spriteBounds.top / 32 + 1))});
-
-        tmx::Layer::Tile& foodTile = foodLayer.GetTile(spriteTile.x -1, spriteTile.y-1);
-
-        if (!foodTile.empty() && foodTile.visible)
-        {
-            foodTile.visible = false;
-            collectedCount++;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
