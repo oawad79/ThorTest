@@ -108,9 +108,6 @@ int main()
     if (!moneyTexture.loadFromImage(moneyImage))
         return 1;
 
-    // Create sprite which is animated
-    sf::Sprite moneySprite(moneyTexture);
-
     thor::FrameAnimation moneyAnimation;
     addFrames(moneyAnimation, 1, 9, 13);
 
@@ -119,18 +116,15 @@ int main()
 
     tmx::ObjectGroup &moneyGroup = map.GetObjectGroup("money");
     const std::vector<tmx::ObjectGroup::Object> &objects = moneyGroup.GetObjects();
-    QList<sf::Sprite> coins;
-    foreach (const tmx::ObjectGroup::Object obj, objects)
+    std::vector<sf::Sprite> coinsSprites;
+    foreach (const tmx::ObjectGroup::Object &obj, objects)
     {
-        sf::Sprite coin;
-        coin.setPosition(sf::Vector2f(obj.GetX(), obj.GetY()));
-        coin.setTexture(moneyTexture);
+        sf::Sprite coinSprite;
+        coinSprite.setPosition(sf::Vector2f(obj.GetX(), obj.GetY()));
+        coinSprite.setTexture(moneyTexture);
 
-        coins.append(coin);
+        coinsSprites.push_back(coinSprite);
     }
-
-    std::cout << static_cast<tmx::ObjectGroup::Object>(objects.at(0)).GetX() << std::endl;
-
 
     // Create clock to measure frame time
     sf::Clock frameClock;
@@ -265,7 +259,7 @@ int main()
 
         if (!moneyAnimator.isPlayingAnimation())
         {
-            moneyAnimator.playAnimation("money", false);
+            moneyAnimator.playAnimation("money", true);
         }
 
         view.setCenter(scrollPosition);
@@ -277,13 +271,19 @@ int main()
         animator.animate(sprite);
 
         moneyAnimator.update(dt);
-        moneyAnimator.animate(moneySprite);
+
+        for (int x = 0;x < coinsSprites.size();x++) {
+            moneyAnimator.animate(coinsSprites.at(x));
+        }
 
         // Draw everything
         window.clear();
         window.draw(map);
         window.draw(sprite);
-        window.draw(moneySprite);
+
+        foreach (sf::Sprite coinSprite, coinsSprites) {
+            window.draw(coinSprite);
+        }
 
         glEnable (GL_SCISSOR_TEST);
         glScissor(680, 0, 120,  screenDimensions.y);

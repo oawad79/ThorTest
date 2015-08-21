@@ -3627,7 +3627,7 @@
   </data>
  </layer>
  <objectgroup name="money">
-  <object id="1" name="money" x="289" y="256" width="31" height="32"/>
-  <object id="2" name="money" x="448" y="258" width="32" height="28"/>
+  <object id="1" name="money" x="287" y="255" width="37" height="32"/>
+  <object id="2" name="money" x="448" y="255" width="32" height="30"/>
  </objectgroup>
 </map>
