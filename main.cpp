@@ -6,6 +6,7 @@
 #include <vector>
 #include <QDebug>
 #include <QString>
+#include <QList>
 
 #include <Thor/Animations.hpp>
 #include <STP/TMXLoader.hpp>
@@ -44,6 +45,9 @@ int main()
 
     sf::Vector2f scrollPosition(screenDimensions.x / 2, screenDimensions.y / 2);
 
+    ///////////////////////////////////////////////////////////////////////////////
+    /// \brief playerImage
+    /// ///////////////////////////////////////////////////////////////////////////
     // Load image that contains animation steps
     sf::Image image;
     if (!image.loadFromFile("/home/oawad/Downloads/sfml/ThorTest/Media/player.png"))
@@ -58,17 +62,6 @@ int main()
     // Create sprite which is animated
     sf::Sprite sprite(texture);
     sprite.setPosition(100.f, 100.f);
-
-    sf::Image lettersImage;
-    if (!lettersImage.loadFromFile("/home/oawad/Downloads/sfml/ThorTest/Media/welcome.png"))
-        return 1;
-
-    sf::Texture lettersTexture;
-    if (!lettersTexture.loadFromImage(lettersImage))
-        return 1;
-
-    // Create sprite which is animated
-    sf::Sprite lettersSprite(lettersTexture);
 
     // Define walk animation
     thor::FrameAnimation walkLeft;
@@ -89,12 +82,60 @@ int main()
     // Create a sf::Vector2f for player velocity and add to the y variable value gravity
     sf::Vector2f playerVelocity(0, gravity);
 
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /// \brief lettersImage
+    ///////////////////////////////////////////////////////////////////////////////////////
+    sf::Image lettersImage;
+    if (!lettersImage.loadFromFile("/home/oawad/Downloads/sfml/ThorTest/Media/welcome.png"))
+        return 1;
+
+    sf::Texture lettersTexture;
+    if (!lettersTexture.loadFromImage(lettersImage))
+        return 1;
+
+    // Create sprite which is animated
+    sf::Sprite lettersSprite(lettersTexture);
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    /// \brief moneyImage
+    //////////////////////////////////////////////////////////////////////////////////////////
+    sf::Image moneyImage;
+    if (!moneyImage.loadFromFile("/home/oawad/Downloads/sfml/ThorTest/Media/RocksDC.png"))
+        return 1;
+
+    sf::Texture moneyTexture;
+    if (!moneyTexture.loadFromImage(moneyImage))
+        return 1;
+
+    // Create sprite which is animated
+    sf::Sprite moneySprite(moneyTexture);
+
+    thor::FrameAnimation moneyAnimation;
+    addFrames(moneyAnimation, 1, 9, 13);
+
+    thor::Animator<sf::Sprite, std::string> moneyAnimator;
+    moneyAnimator.addAnimation("money", moneyAnimation, sf::seconds(2.f));
+
+    tmx::ObjectGroup &moneyGroup = map.GetObjectGroup("money");
+    const std::vector<tmx::ObjectGroup::Object> &objects = moneyGroup.GetObjects();
+    QList<sf::Sprite> coins;
+    foreach (const tmx::ObjectGroup::Object obj, objects)
+    {
+        sf::Sprite coin;
+        coin.setPosition(sf::Vector2f(obj.GetX(), obj.GetY()));
+        coin.setTexture(moneyTexture);
+
+        coins.append(coin);
+    }
+
+    std::cout << static_cast<tmx::ObjectGroup::Object>(objects.at(0)).GetX() << std::endl;
+
+
     // Create clock to measure frame time
     sf::Clock frameClock;
 
     sprite.setPosition(backLayer.GetTile(1, 3).GetGlobalBounds().top, backLayer.GetTile(1, 3).GetGlobalBounds().left);
-
-
     animator.playAnimation("standStill", false);
 
     int collectedCount = 0;
@@ -109,11 +150,9 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            //desktop.HandleEvent( event );
-
             if (event.type == sf::Event::Closed)
             {
-                return 0;
+                window.close();
             }
         }
 
@@ -224,6 +263,11 @@ int main()
             scrollPosition.x = map.GetWidth() * 32 - screenDimensions.x / 2;
         }
 
+        if (!moneyAnimator.isPlayingAnimation())
+        {
+            moneyAnimator.playAnimation("money", false);
+        }
+
         view.setCenter(scrollPosition);
 
         window.setView(view);
@@ -232,10 +276,14 @@ int main()
         animator.update(dt);
         animator.animate(sprite);
 
+        moneyAnimator.update(dt);
+        moneyAnimator.animate(moneySprite);
+
         // Draw everything
         window.clear();
         window.draw(map);
         window.draw(sprite);
+        window.draw(moneySprite);
 
         glEnable (GL_SCISSOR_TEST);
         glScissor(680, 0, 120,  screenDimensions.y);

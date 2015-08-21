@@ -28,4 +28,5 @@ HEADERS +=
 SOURCES += main.cpp
 
 OTHER_FILES += Media/*.png
+OTHER_FILES += Media/sup2.tmx
 

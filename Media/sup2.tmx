@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="32" tileheight="32" nextobjectid="4">
  <tileset firstgid="1" name="test" tilewidth="32" tileheight="32" tilecount="240">
   <image source="RocksSP.png" width="512" height="480"/>
  </tileset>
  <tileset firstgid="241" name="letters" tilewidth="16" tileheight="32" tilecount="400">
   <image source="RocksFontMedium.png" width="320" height="640"/>
+ </tileset>
+ <tileset firstgid="641" name="money" tilewidth="32" tileheight="32" tilecount="256">
+  <image source="RocksDC.png" width="512" height="512"/>
+  <tile id="24">
+   <properties>
+    <property name="money" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="back" width="60" height="20">
   <data>
@@ -2905,12 +2913,12 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="665"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="665"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -3618,4 +3626,8 @@
    <tile gid="0"/>
   </data>
  </layer>
+ <objectgroup name="money">
+  <object id="1" name="money" x="289" y="256" width="31" height="32"/>
+  <object id="2" name="money" x="448" y="258" width="32" height="28"/>
+ </objectgroup>
 </map>
